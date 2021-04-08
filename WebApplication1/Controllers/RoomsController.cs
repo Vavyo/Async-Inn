@@ -15,24 +15,26 @@ namespace WebApplication1.Controllers
     public class RoomsController : ControllerBase
     {
         private readonly AsyncInnDbContext _context;
+        private readonly DatabaseRoomRepository roomRepository;
 
-        public RoomsController(AsyncInnDbContext context)
+        public RoomsController(AsyncInnDbContext context, DatabaseRoomRepository roomRepository)
         {
             _context = context;
+            this.roomRepository = roomRepository;
         }
 
         // GET: api/Rooms
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
         {
-            return await _context.Rooms.ToListAsync();
+            return Ok(await roomRepository.GetAllRooms());
         }
 
         // GET: api/Rooms/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Room>> GetRoom(int id)
         {
-            var room = await _context.Rooms.FindAsync(id);
+            var room = await roomRepository.GetRoom(id);
 
             if (room == null)
             {
@@ -51,23 +53,10 @@ namespace WebApplication1.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(room).State = EntityState.Modified;
-
-            try
+            
+            if (!await roomRepository.UpdateRoom(room))
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RoomExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
@@ -78,8 +67,7 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public async Task<ActionResult<Room>> PostRoom(Room room)
         {
-            _context.Rooms.Add(room);
-            await _context.SaveChangesAsync();
+            await roomRepository.CreateRoom(room);
 
             return CreatedAtAction("GetRoom", new { id = room.Id }, room);
         }
@@ -88,21 +76,15 @@ namespace WebApplication1.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRoom(int id)
         {
-            var room = await _context.Rooms.FindAsync(id);
+            var room = await roomRepository.GetRoom(id);
             if (room == null)
             {
                 return NotFound();
             }
 
-            _context.Rooms.Remove(room);
-            await _context.SaveChangesAsync();
+            await roomRepository.DeleteRoom(room);
 
             return NoContent();
-        }
-
-        private bool RoomExists(int id)
-        {
-            return _context.Rooms.Any(e => e.Id == id);
         }
     }
 }
