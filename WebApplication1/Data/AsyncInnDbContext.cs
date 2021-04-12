@@ -16,8 +16,15 @@ namespace WebApplication1.Data
         public DbSet<Hotel> Hotels { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Amenity> Amenities { get; set; }
+        public DbSet<RoomAmenity> RoomAmenities { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<RoomAmenity>()
+                .HasKey(roomAmenity => new
+                {
+                    roomAmenity.RoomID,
+                    roomAmenity.AmenityID
+                });
             modelBuilder.Entity<Hotel>().HasData(
                 new Hotel { Id = 3, Name = "Marrrrriot", City = "Cedar Rapids", Country = "USA", Phone = "Oh no you don't", State = "Iowa", StreetAddress = "665 Place st" },
                 new Hotel { Id = 1, Name = "Carrion", City = "Cedar Rapids", Country = "USA", Phone = "Still not gonna", State = "Iowa", StreetAddress = "664 Place st" },

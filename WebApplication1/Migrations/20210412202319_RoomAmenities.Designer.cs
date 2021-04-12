@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication1.Data;
 
 namespace WebApplication1.Migrations
 {
     [DbContext(typeof(AsyncInnDbContext))]
-    partial class AsyncInnDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210412202319_RoomAmenities")]
+    partial class RoomAmenities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -176,28 +178,7 @@ namespace WebApplication1.Migrations
 
                     b.HasKey("RoomID", "AmenityID");
 
-                    b.HasIndex("AmenityID");
-
                     b.ToTable("RoomAmenities");
-                });
-
-            modelBuilder.Entity("WebApplication1.Models.RoomAmenity", b =>
-                {
-                    b.HasOne("WebApplication1.Models.Amenity", "Amenity")
-                        .WithMany()
-                        .HasForeignKey("AmenityID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApplication1.Models.Room", "Room")
-                        .WithMany()
-                        .HasForeignKey("RoomID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Amenity");
-
-                    b.Navigation("Room");
                 });
 #pragma warning restore 612, 618
         }

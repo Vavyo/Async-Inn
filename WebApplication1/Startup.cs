@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Data;
+using WebApplication1.Data.Interfaces;
 
 namespace WebApplication1
 {
@@ -31,6 +32,9 @@ namespace WebApplication1
                 string connectionString = Configuration.GetConnectionString("DefaultConnection");
                 options.UseSqlServer(connectionString);
             });
+            services.AddTransient<IHotelRepository, DatabaseHotelRepository>();
+            services.AddTransient<IRoomRepository, DatabaseRoomRepository>();
+            services.AddTransient<IAmenityRepository, DatabaseAmenityRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

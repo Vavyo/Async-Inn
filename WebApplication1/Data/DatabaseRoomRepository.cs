@@ -15,6 +15,13 @@ namespace WebApplication1.Data
         {
             _context = context;
         }
+
+        public async Task<bool> AddRoomAmenity(int roomId, int amenityId)
+        {
+            return true;
+            throw new NotImplementedException();
+        }
+
         public async Task CreateRoom(Room room)
         {
             _context.Add(room);
@@ -35,6 +42,12 @@ namespace WebApplication1.Data
         public async Task<Room> GetRoom(int id)
         {
             return await _context.Rooms.FindAsync(id);
+        }
+
+        public async Task<bool> RemoveRoomAmenity(int roomId, int amenityId)
+        {
+            return true;
+            throw new NotImplementedException();
         }
 
         public async Task<bool> UpdateRoom(Room room)
