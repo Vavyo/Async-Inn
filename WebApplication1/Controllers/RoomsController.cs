@@ -92,7 +92,7 @@ namespace WebApplication1.Controllers
         [HttpPost("{roomId}/Amenities/{amenityId}")]
         public async Task<IActionResult> AddAmenity(int roomId, int amenityId)
         {
-            if (await roomRepository.AddRoomAmenity(roomId, amenityId))
+            if (!await roomRepository.AddRoomAmenity(roomId, amenityId))
                 return NotFound();
             return NoContent();
         }

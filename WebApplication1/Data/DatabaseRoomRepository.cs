@@ -18,8 +18,22 @@ namespace WebApplication1.Data
 
         public async Task<bool> AddRoomAmenity(int roomId, int amenityId)
         {
+            var room = await _context.Rooms.FindAsync(roomId);
+            var amenity = await _context.Amenities.FindAsync(amenityId);
+            var roomAmenity = await _context.RoomAmenities.FindAsync(roomId, amenityId); // make sure it doesnt exist, probably a better way to do.
+            if (room == null || amenity == null || roomAmenity != null)
+            {
+                return false;
+            }
+            roomAmenity = new RoomAmenity
+            {
+                RoomID = roomId,
+                AmenityID = amenityId
+            };
+
+            _context.RoomAmenities.Add(roomAmenity);
+            await _context.SaveChangesAsync();
             return true;
-            throw new NotImplementedException();
         }
 
         public async Task CreateRoom(Room room)
@@ -46,8 +60,14 @@ namespace WebApplication1.Data
 
         public async Task<bool> RemoveRoomAmenity(int roomId, int amenityId)
         {
+            var roomAmenity = await _context.RoomAmenities.FindAsync(roomId, amenityId);
+            if (roomAmenity == null)
+                return false;
+            
+            _context.RoomAmenities.Remove(roomAmenity);
+            await _context.SaveChangesAsync();
+
             return true;
-            throw new NotImplementedException();
         }
 
         public async Task<bool> UpdateRoom(Room room)
