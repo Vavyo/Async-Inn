@@ -17,8 +17,15 @@ namespace WebApplication1.Data
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Amenity> Amenities { get; set; }
         public DbSet<RoomAmenity> RoomAmenities { get; set; }
+        public DbSet<HotelRoom> HotelRooms { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<HotelRoom>()
+                .HasKey(hotelRoom => new
+                {
+                    hotelRoom.HotelId,
+                    hotelRoom.RoomNumber
+                });
             modelBuilder.Entity<RoomAmenity>()
                 .HasKey(roomAmenity => new
                 {
