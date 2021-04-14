@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
+using WebApplication1.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,33 +23,45 @@ namespace WebApplication1.Controllers
 
         // GET: api/<HotelRoomController>
         [HttpGet]
-        public IEnumerable<string> Get(int hotelId)
+        public async Task<ActionResult<IEnumerable<HotelRoom>>> Get(int hotelId)
         {
-            return new string[] { "value1", "value2" };
+            return Ok(await hotelRoomRepository.GetAllHotelRooms(hotelId));
         }
 
         // GET api/<HotelRoomController>/5
         [HttpGet("{id}")]
-        public string Get(int hotelId, int id)
+        public async Task Get(int hotelId, int number)
         {
-            return "value";
+            await hotelRoomRepository.GetHotelRoom(hotelId, number);
         }
 
         // POST api/<HotelRoomController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task Post(int hotelId, [FromBody] CreateHotelRoom hotelRoom)
         {
+            await hotelRoomRepository.AddHotelRoom(hotelId, hotelRoom);
         }
 
         // PUT api/<HotelRoomController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int hotelId, int id, [FromBody] CreateHotelRoom hotelRoom)
         {
+            if (id != hotelRoom.RoomNumber)
+            {
+                return BadRequest();
+            }
+
+            if (!await hotelRoomRepository.UpdateHotelRoom(hotelId, hotelRoom))
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
 
         // DELETE api/<HotelRoomController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(int hotelId, int id)
         {
         }
     }

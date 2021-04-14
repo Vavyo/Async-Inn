@@ -8,6 +8,9 @@ namespace WebApplication1.Data.Interfaces
 {
     public interface IHotelRoomRepository
     {
-
+        Task AddHotelRoom(int hotelId, CreateHotelRoom hotelRoom);
+        Task<HotelRoom> GetHotelRoom(int hotelId, int number);
+        Task<bool> UpdateHotelRoom(int hotelId, CreateHotelRoom hotelRoom);
+        Task<IEnumerable<HotelRoom>> GetAllHotelRooms(int hotelId);
     }
 }
