@@ -36,17 +36,8 @@ namespace WebApplication1.Data
             return await _context.HotelRooms.FindAsync(hotelId, number);
         }
 
-        public async Task<bool> UpdateHotelRoom(int hotelId, CreateHotelRoom createHotelRoom)
+        public async Task<bool> UpdateHotelRoom(HotelRoom hotelRoom)
         {
-            var hotelRoom = new HotelRoom
-            {
-                HotelId = hotelId,
-                RoomNumber = createHotelRoom.RoomNumber,
-                RoomId = createHotelRoom.RoomId,
-                Rate = createHotelRoom.Rate,
-                PetFriendly = createHotelRoom.PetFriendly
-            };
-
             _context.Entry(hotelRoom).State = EntityState.Modified;
 
             try
@@ -58,7 +49,7 @@ namespace WebApplication1.Data
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!HotelRoomExists(hotelId, createHotelRoom.RoomNumber))
+                if (!HotelRoomExists(hotelRoom.HotelId, hotelRoom.RoomNumber))
                 {
                     return false;
                 }
@@ -76,6 +67,12 @@ namespace WebApplication1.Data
         public async Task<IEnumerable<HotelRoom>> GetAllHotelRooms(int hotelId)
         {
             return await _context.HotelRooms.ToListAsync();
+        }
+
+        public async Task DeleteHotelRoom(HotelRoom hotelRoom)
+        {
+            _context.HotelRooms.Remove(hotelRoom);
+            await _context.SaveChangesAsync();
         }
     }
 }

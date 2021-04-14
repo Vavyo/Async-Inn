@@ -29,10 +29,16 @@ namespace WebApplication1.Controllers
         }
 
         // GET api/<HotelRoomController>/5
-        [HttpGet("{id}")]
-        public async Task Get(int hotelId, int number)
+        [HttpGet("{roomNumber}")]
+        public async Task<ActionResult<HotelRoom>> Get(int hotelId, int roomNumber)
         {
-            await hotelRoomRepository.GetHotelRoom(hotelId, number);
+            var hotelRoom = await hotelRoomRepository.GetHotelRoom(hotelId, roomNumber);
+            if (hotelRoom == null)
+            {
+                return BadRequest();
+            }
+
+            return hotelRoom;
         }
 
         // POST api/<HotelRoomController>
@@ -43,15 +49,15 @@ namespace WebApplication1.Controllers
         }
 
         // PUT api/<HotelRoomController>/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int hotelId, int id, [FromBody] CreateHotelRoom hotelRoom)
+        [HttpPut("{roomNumber}")]
+        public async Task<IActionResult> Put(int hotelId, int roomNumber, [FromBody] HotelRoom hotelRoom)
         {
-            if (id != hotelRoom.RoomNumber)
+            if (roomNumber != hotelRoom.RoomNumber)
             {
                 return BadRequest();
             }
 
-            if (!await hotelRoomRepository.UpdateHotelRoom(hotelId, hotelRoom))
+            if (!await hotelRoomRepository.UpdateHotelRoom(hotelRoom))
             {
                 return NotFound();
             }
@@ -60,9 +66,19 @@ namespace WebApplication1.Controllers
         }
 
         // DELETE api/<HotelRoomController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int hotelId, int id)
+        [HttpDelete("{roomNumber}")]
+        public async Task<IActionResult> Delete(int hotelId, int roomNumber)
         {
+            var hotelRoom = await hotelRoomRepository.GetHotelRoom(hotelId, roomNumber);
+            if (hotelRoom == null)
+            {
+                return NotFound();
+            }
+
+            await hotelRoomRepository.DeleteHotelRoom(hotelRoom);
+
+            return NoContent();
+
         }
     }
 }
