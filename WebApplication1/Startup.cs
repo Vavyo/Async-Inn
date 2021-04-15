@@ -78,7 +78,10 @@ namespace WebApplication1
                 });
             });
 
-
+            app.UseSwaggerUI(options => {
+                options.SwaggerEndpoint("/api/v1/swagger.json", "Student Demo");
+                options.RoutePrefix = "docs";
+            });
         }
     }
 }
