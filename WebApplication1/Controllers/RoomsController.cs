@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
+using WebApplication1.Data.Interfaces;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -15,9 +16,9 @@ namespace WebApplication1.Controllers
     public class RoomsController : ControllerBase
     {
         private readonly AsyncInnDbContext _context;
-        private readonly DatabaseRoomRepository roomRepository;
+        private readonly IRoomRepository roomRepository;
 
-        public RoomsController(AsyncInnDbContext context, DatabaseRoomRepository roomRepository)
+        public RoomsController(AsyncInnDbContext context, IRoomRepository roomRepository)
         {
             _context = context;
             this.roomRepository = roomRepository;
@@ -84,6 +85,22 @@ namespace WebApplication1.Controllers
 
             await roomRepository.DeleteRoom(room);
 
+            return NoContent();
+        }
+
+        // Room Amenity Actions:
+        [HttpPost("{roomId}/Amenities/{amenityId}")]
+        public async Task<IActionResult> AddAmenity(int roomId, int amenityId)
+        {
+            if (!await roomRepository.AddRoomAmenity(roomId, amenityId))
+                return NotFound();
+            return NoContent();
+        }
+        [HttpDelete("{roomId}/Amenities/{amenityId}")]
+        public async Task<IActionResult> RemoveAmenity(int roomId, int amenityId)
+        {
+            if (await roomRepository.AddRoomAmenity(roomId, amenityId))
+                return NotFound();
             return NoContent();
         }
     }

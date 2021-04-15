@@ -15,5 +15,7 @@ namespace WebApplication1.Data.Interfaces
         Task<bool> UpdateRoom(Room room);
 
         Task DeleteRoom(Room room);
+        Task<bool> AddRoomAmenity(int roomId, int amenityId);
+        Task<bool> RemoveRoomAmenity(int roomId, int amenityId);
     }
 }
